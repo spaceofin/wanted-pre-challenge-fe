@@ -1,25 +1,33 @@
-import { getMockData } from "./data/mockData";
-import { MockData } from "./types/mockTypes";
+import { getMockData, PER_PAGE } from "./data/mockData";
+import { MockData, GetMockDataResult } from "./types/mockTypes";
 import { useState, useEffect, useRef } from "react";
 import { Product } from "./components/Product";
+import { Loading } from "./components/Loading";
 
 function App() {
   const [mockData, setMockData] = useState<MockData[]>([]);
   const [pageNum, setPageNum] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEnd, setIsEnd] = useState<boolean>(false);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
   const observer = useRef<IntersectionObserver | null>(null);
   const targetRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchNextPage = async () => {
       try {
         const response = await getMockData(pageNum);
         const { datas, isEnd } = response;
         setMockData((prev) => [...prev, ...datas]);
+        setTotalPrice(
+          (prev) => prev + datas.reduce((acc, item) => acc + item.price, 0)
+        );
         if (isEnd) setIsEnd(isEnd);
       } catch (err) {
         console.error("Error occurred while fetching data:", err);
       } finally {
+        setIsLoading(false);
       }
     };
     fetchNextPage();
@@ -44,10 +52,14 @@ function App() {
   }, [isEnd]);
 
   return (
-    <div className="flex flex-col gap-3 m-10 items-center">
+    <div className="flex flex-col gap-3 m-10 items-center mb-48">
       {mockData?.map((data: MockData) => (
         <Product key={data.productId} data={data} />
       ))}
+      {isLoading && <Loading />}
+      <div className="fixed bottom-0 w-full flex justify-center items-center bg-purple-700 text-white h-48 text-5xl font-mono">
+        TOTAL PRICE: {totalPrice}
+      </div>
       <div ref={targetRef}></div>
     </div>
   );

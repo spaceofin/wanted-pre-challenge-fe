@@ -26,3 +26,9 @@
 ### 첨부 코드
 
 구현에만 집중할 수 있도록 mock 데이터와 호출용 promise 함수를 제공해 드리니 아래를 사용하시길 바랍니다.
+
+---
+
+## 구현 결과 영상
+
+![241004_infinite_scroll](https://github.com/user-attachments/assets/dd8f800d-28f1-4acf-9bc0-6d2c51a57388)

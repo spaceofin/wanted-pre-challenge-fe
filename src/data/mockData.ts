@@ -1,3 +1,5 @@
+import { MockData, GetMockDataResult } from "../types/mockTypes";
+
 const MOCK_DATA: MockData[] = [
   {
     productId: "66e1c1df3594bb65169e0f9b",
@@ -709,17 +711,10 @@ const MOCK_DATA: MockData[] = [
   },
 ];
 
-interface MockData {
-  productId: string;
-  productName: string;
-  price: number;
-  boughtDate: string;
-}
-
-const PER_PAGE = 10;
+export const PER_PAGE = 10;
 
 // 페이지는 1부터 시작함
-export const getMockData = (pageNum: number) => {
+export const getMockData = (pageNum: number): Promise<GetMockDataResult> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const datas: MockData[] = MOCK_DATA.slice(
